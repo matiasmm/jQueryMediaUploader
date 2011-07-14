@@ -1,0 +1,49 @@
+
+<script>
+/**
+* 
+*
+*/
+(function($){
+    MediaUploader = {};
+    MediaUploader.Store = {
+        files: []
+    };
+    MediaUploader.FileSelector = function(input_selector){
+        var input = $(input_selector);
+
+        var o = {
+            origin_input: input,
+            widget: {},
+            /**
+             * crea el boton para subir las imagenes
+             */
+            create: function(){
+                var div =  $('<div>');
+                o.widget.container = div;
+                div
+                    .append(o.widget.button = $('<input type="button" value="Upload">')); 
+                    .append(o.widget.submit = $('<input type="hidden">').attr("name", o.widget.origin_input.attr("name")));
+                    o.widget.bind('click', {t: o},function(){
+                        t.makeWindow();
+                    });
+
+                
+                this.origin_input.after(div);
+                this.origin_input.remove();
+            },
+            /**
+            * crea la ventana de donde se suben las imagens
+             */
+            makeWindow: function(){
+                var w = $('<div class="mediauploader">');
+                
+            }
+
+        };   
+        o.create();
+        return o;     
+    }
+})(jQuery);
+
+</script>
