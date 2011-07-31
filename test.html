@@ -1,13 +1,50 @@
-
+<script src="/sfJqueryReloadedPlugin/js/jquery-1.4.2.min.js"></script>
 <script>
 /**
 * 
 *
 */
 (function($){
-    MediaUploader = {};
+    MediaUploader = {
+        i18n: {
+            button_submit: "Upload",
+            select_element: "Select file",
+            reading_library_db: "Loading files",
+            uploading: "Uploading"
+        }
+    };
     MediaUploader.Store = {
-        files: []
+        url: "jq/store",
+        files: [],
+        subscribed: [],
+        subscribe: function(fs){
+            this.subscribed.push(fs);
+        },
+        unsubscribe: function(fs){
+            for(var k=0; k < this.subscribed.length; k++){
+                if(fs == this.subscribed[k]){
+                    this.subscribed.splice(k,1);
+                    return;
+                }
+            }
+        },
+        add: function(item){
+            this.files.push(item);
+            for(var k=0; k < this.subscribed.length; k++){
+                this.subscribed[k].add(item);
+            }
+        }
+    
+    };
+    MediaUploader.Render = {
+        image: function(item){
+            return $("<img>")
+                .data('id', item.id)
+                .attr("src", item.src)
+                .attr("height", item.width)
+                .attr("width", item.height)
+                ;
+        }
     };
     MediaUploader.FileSelector = function(input_selector){
         var input = $(input_selector);
@@ -22,10 +59,10 @@
                 var div =  $('<div>');
                 o.widget.container = div;
                 div
-                    .append(o.widget.button = $('<input type="button" value="Upload">')); 
-                    .append(o.widget.submit = $('<input type="hidden">').attr("name", o.widget.origin_input.attr("name")));
-                    o.widget.bind('click', {t: o},function(){
-                        t.makeWindow();
+                    .append(o.widget.button = $('<input type="button">').attr("value", MediaUploader.i18n.select_element)) 
+                    .append(o.widget.submit = $('<input type="hidden">').attr("name", o.origin_input.attr("name")));
+                    o.widget.button.bind('click', {t: this},function(event){
+                        $("body").append(event.data.t.makeWindow());
                     });
 
                 
@@ -35,15 +72,66 @@
             /**
             * crea la ventana de donde se suben las imagens
              */
-            makeWindow: function(){
-                var w = $('<div class="mediauploader">');
-                
+             makeWindow: function(){
+                var $this = this;
+                if($this.origin_input.data("obj") !== null){
+                    return;
+                }
+                $this.origin_input.data("obj", $this);
+                var iframe = $('<iframe id="mediauploader_iframe" name="mediauploader_iframe">').show();
+                this.files_container = $("<div>");
+                this.win = $('<div class="mediauploader">')
+                     .append(iframe)
+                     .append($('<a>').html("X").bind('click',function(){
+                       $this.win.close(); 
+                     }))
+                     .append($('<form target="mediauploader_iframe" method="post" enctype="multipart/form-data">')
+                         .append($('<input type="file" name="f">'))
+                         .append($('<input type="submit" name="submit">').attr("value", MediaUploader.i18n.button_submit))
+                     )
+                     .append(this.files_container);
+                     
+                this.win.close = function(){
+                    MediaUploader.Store.unsubscribe($this);
+                    $this.win.remove();
+                    $this.origin_input.data("obj", null);
+                    delete $this;
+                };
+
+                return this.win;
+            },
+            add: function(item){
+                if(item.type == undefined || MediaUploader.Render[item.type] == false){
+                    alert("item with incorrect or null type: " + item.type);
+                    return;
+                }
+                var div = $("<div>")
+                    .append(MediaUploader.Render[item.type](item));
+                this.files_container.append(div);
             }
 
         };   
+        MediaUploader.Store.subscribe(o);
         o.create();
+    
         return o;     
     }
 })(jQuery);
 
 </script>
+<input type="TEXT" name="matias">
+
+<script>
+    MediaUploader.FileSelector("input"); 
+</script>
+
+<style>
+    .mediauploader{
+        float: left;
+        background-color:red;
+        width: 450px;
+        margin: auto ;
+        height: 300px;
+        position: fixed;                
+    }
+</style>
