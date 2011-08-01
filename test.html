@@ -139,6 +139,7 @@
                 }
                 o.widget.container = div;
                 div
+                    .append(o.widget.display = $('<div>'))
                     .append(o.widget.button = $('<input type="button">').attr("value", MediaUploader.i18n.select_element)) 
                     .append(o.widget.submit = $('<input type="hidden">').attr("name", o.origin_input.attr("name")));
                     o.widget.button.bind('click', {t: this},function(event){
@@ -213,7 +214,16 @@
                          .append($('<input type="submit" name="submit">').attr("value", MediaUploader.i18n.button_submit))
                      )
                      .append(this.message_container = $('<div class="messages">'))
-                     .append(this.files_container);
+                     .append(this.files_container)
+                     .append($("<input value='select' type='button'>").bind('click', function(){
+                         $this.widget.display.html('');
+                         $this.files_container.find(".selected").each(function(){
+                             var file = $(this).data('item');
+                             var rendered = MediaUploader.Render[file.type](file);
+                             $this.widget.display.append(rendered);
+                         });
+                         $this.win.close();
+                     }));
                      
                 this.win.close = function(){
                     MediaUploader.Store.unsubscribe($this);
