@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+        <script src="jQueryMediaUploader.js"></script>
+        <link type="text/css" href="jQueryMediaUploader.css" rel="stylesheet" media="screen" />
+
+    </head>
+    <body>
+        <input type="TEXT" id ="matias" name="matias[]" value="1">
+        <input type="TEXT" name="matiasd[]" id="matias2"  value="2">
+        <input type="hidden" name="matiasd[]" id="3"  value="2">
+
+        <script type="text/javascript">
+             MediaUploader.FileSelector("input[type=TEXT]", {
+                categories: ["guitars"],
+                multiple: true
+            });
+            MediaUploader.FileSelector("[type=hidden]", {
+                categories: ['pianos', 'drums'],
+                multiple: false
+            });
+        </script>
+    </body>
+</html>

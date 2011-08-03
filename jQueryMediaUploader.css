@@ -1,0 +1,29 @@
+    .mediauploader .file{
+        display: inline;
+        border: 5px solid blue;
+        margin: 5px;
+        float: left;
+    }
+    .mediauploader .file.selected{
+        border-color: orange;
+    }
+    .mediauploader .file.unselected{
+        border-color: #507AAA;
+    }
+
+    .mediauploader .container{
+        overflow: scroll;
+        height:200px;
+    }
+    .mediauploader{
+        float: left;
+        background-color: #EEEEEE;
+        width: 450px;
+        margin: auto ;
+        height: 300px;
+        position: fixed;                
+    }
+    .mediauploader *{
+        font: 10px arial;
+    }
+
