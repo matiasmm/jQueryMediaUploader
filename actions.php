@@ -11,6 +11,7 @@ if($_GET['action'] == 'list'){
                     'id' => 1, //mandatory
                     'type' => 'image', //mandatory
                     'src' => 'http://farm2.static.flickr.com/1233/1304237864_7a4aeb2bbd.jpg', 
+                    'category' => 'guitars',
                     'height' => '100',
                     'width' => '100',
                ),
@@ -18,6 +19,7 @@ if($_GET['action'] == 'list'){
                     'id' => 2, //mandatory
                     'type' => 'image', //mandatory
                     'src' => 'http://t2.gstatic.com/images?q=tbn:ANd9GcRCNdcXr6Mn18kc069JtQFywX6oYr4O2LtleXsUC8iNiUaSmpjH', 
+                    'category' => 'guitars', 
                     'height' => '100',
                     'width' => '100',
                 ),
@@ -57,6 +59,7 @@ if($_GET['action'] == 'upload'){
                     'id' => 1000, //mandatory
                     'type' => 'image', //mandatory
                     'src' => 'http://farm2.static.flickr.com/1233/1304237864_7a4aeb2bbd.jpg', 
+                    'category' => 'drums', 
                     'height' => '100',
                     'width' => '100',
                )));

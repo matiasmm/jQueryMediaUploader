@@ -1,7 +1,5 @@
-<script src="/sfJqueryReloadedPlugin/js/jquery-1.4.2.min.js"></script>
-<script>
 /**
-* 
+* Matias Montenegro <matiasmmontenegro@gmail.com>
 *
 */
 (function($){
@@ -100,11 +98,17 @@
         add: function(item){
             this.files.push(item);
             for(var k=0; k < this.subscribed.length; k++){
+                if(this.subscribed[k].config.categories !== undefined && this.subscribed[k].config.categories.indexOf(item.category) === -1){
+                    continue;
+                } 
                 this.subscribed[k].add(item);
             }
         },
         _init_window: function(fs){
             for(var k = 0; k < this.files.length; k++){
+                if(fs.config.categories !== undefined && fs.config.categories.indexOf(this.files[k].category) === -1){
+                    continue;
+                }
                 fs.add(this.files[k]);
             }
         },
@@ -155,9 +159,7 @@
             config: config,
             name: null,
             default_files: default_files,
-            /**
-             * crea el boton para subir las imagenes
-             */
+
             create: function(){
                 var div =  $('<div>');
 
@@ -206,11 +208,14 @@
                 }
                 return d;
             },
-            /**
-            * crea la ventana de donde se suben las imagens
-             */
+            
              makeWindow: function(){
                 var $this = this;
+
+                if($this.widget.button.data('fs') === $this){
+                    return ;
+                }
+                $this.widget.button.data('fs', $this);
 
                 var iframe = $('<iframe id="mediauploader_iframe" name="mediauploader_iframe">').hide();
                 this.files_container = $("<div class='container'>");
@@ -267,7 +272,7 @@
                 this.win.close = function(){
                     MediaUploader.Store.unsubscribe($this);
                     $this.win.remove();
-                    $this.origin_input.data("obj", null);
+                    $this.widget.button.data("fs", null);
                     delete $this;
                 };
                 MediaUploader.Store.subscribe(o);
@@ -333,50 +338,3 @@
         return o;     
     }
 })(jQuery);
-
-</script>
-<input type="TEXT" id ="matias" name="matias[]" value="1">
-<input type="TEXT" name="matiasd[]" id="matias2"  value="2">
-<input type="hidden" name="matiasd[]" id="3"  value="2">
-
-<script>
-     MediaUploader.FileSelector("input[type=TEXT]", {
-        categories: ["guitars"],
-        multiple: true
-    });
-    MediaUploader.FileSelector("[type=hidden]", {
-        categories: ['pianos', 'drums'],
-        multiple: false
-    });
-</script>
-
-<style>
-    .mediauploader .file{
-        display: inline;
-        border: 5px solid blue;
-        margin: 5px;
-        float: left;
-    }
-    .mediauploader .file.selected{
-        border-color: orange;
-    }
-    .mediauploader .file.unselected{
-        border-color: #507AAA;
-    }
-
-    .mediauploader .container{
-        overflow: scroll;
-        height:200px;
-    }
-    .mediauploader{
-        float: left;
-        background-color: #EEEEEE;
-        width: 450px;
-        margin: auto ;
-        height: 300px;
-        position: fixed;                
-    }
-    .mediauploader *{
-        font: 10px arial;
-    }
-</style>
