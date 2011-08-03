@@ -21,21 +21,22 @@ Examples of usage
 
 One file selector
 -----------------
+__HTML__
     <!-- you need a name to save the file id setted with jQueryMediaUploader. Value="1" if you are editing, if it's a new entity leave it empty -->
     <input type="hidden" name="file_id" value="1">
 
-Javascript: 
+__Javascript__ 
     MediaUploader.FileSelector("#file_id");
 
 
 Selecting Multiple files
 ------------------------
-HTML:
+__HTML__
       <!-- Again, i'm supposing you are editing -->
       <input type="hidden" class="group" name="file_id[]" value="1">
       <input type="hidden" class="group" name="file_id[]" value="2">
 
-Javascript: 
+__Javascript__ 
     MediaUploader.FileSelector(".group", {
         multiple: true
     });
@@ -45,12 +46,12 @@ You are going to get one button for selecting files multiple files, (not 2 butto
 
 Using categories
 ----------------
-HTML:
+__HTML__
     <!-- Again, i'm supposing you are editing -->
     <input type="hidden" class="group" name="file_id[]" value="1">
     <input type="hidden" class="group" name="file_id[]" value="2">
 
-Javascript: 
+__Javascript__ 
     MediaUploader.FileSelector(".group", {
         multiple: true,
         categories: ['guitars', 'drums', 'cities', 'top models']
