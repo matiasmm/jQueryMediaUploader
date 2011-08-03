@@ -46,7 +46,15 @@
                 this.subscribed[k].message(message, type);
             }
         },
-        start: function(){
+        getItem: function(id){
+            for(var k = 0; k < this.files.length; k++){
+                if(id == this.files[k].id){
+                    return this.files[k];
+                }
+            }
+            return null;
+        },
+        start: function(callback){
             if(this.status == 'none'){
                 this.status = 'loading';
                 var d = {};
@@ -70,8 +78,15 @@
 
                         MediaUploader.Store.broadcast('', 'success');
                         MediaUploader.status = 'success';
+                        if(callback !== undefined){
+                            callback();
+                        }
                     }
                 });
+            }else{
+                if(callback !== undefined){
+                    callback();
+                }
             }
         },
         unsubscribe: function(fs){
@@ -113,8 +128,7 @@
                 .data('id', item.id)
                 .attr("src", item.src)
                 .attr("height", item.width)
-                .attr("width", item.height)
-                ;
+                .attr("width", item.height);
         }
     };
     MediaUploader.FileSelector = function(input_selector, config){
@@ -122,10 +136,25 @@
         if(config === undefined){
             config = {};
         }
+
+        var default_files = [$(input).val()];
+        if(config.multiple == true){
+            $(input).each(function(i, el){
+                if(i == 0){
+                    input = $(el);
+                }else{
+                    default_files.push($(el).val());
+                    $(el).remove();
+                }
+            });
+        }
+
         var o = {
             origin_input: input,
             widget: {},
             config: config,
+            name: null,
+            default_files: default_files,
             /**
              * crea el boton para subir las imagenes
              */
@@ -137,18 +166,33 @@
                 }else{
                     MediaUploader.Store.noCateogories = true;
                 }
-                o.widget.container = div;
+                this.widget.container = div;
+                this.name = this.origin_input.attr("name");
                 div
                     .append(o.widget.display = $('<div>'))
-                    .append(o.widget.button = $('<input type="button">').attr("value", MediaUploader.i18n.select_element)) 
-                    .append(o.widget.submit = $('<input type="hidden">').attr("name", o.origin_input.attr("name")));
+                    .append(o.widget.button = $('<input type="button">').attr("value", MediaUploader.i18n.select_element));
                     o.widget.button.bind('click', {t: this},function(event){
                         $("body").append(event.data.t.makeWindow());
                     });
 
-                
+                if(this.config.multiple){ 
+                    this.name = (this.name.substring(this.name.length-2,this.name.length) == '[]')? this.name.substring(0, this.name.length-2) : this.name;
+                }
                 this.origin_input.after(div);
                 this.origin_input.remove();
+                if(this.default_files.length){
+                    $(document).ready(function(){
+                        MediaUploader.Store.start(function(){
+                            o.widget.display.html('');
+                            for(var k=0; k<o.default_files.length; k++){
+                                var f = MediaUploader.Store.getItem(o.default_files[k]);
+                                if(f !== null){
+                                    o.displayAdd(f);
+                                }
+                            }
+                        });
+                    })
+                }
             },
             getExtraFields: function(){
                 var d = $("<div>");
@@ -167,10 +211,7 @@
              */
              makeWindow: function(){
                 var $this = this;
-                if($this.origin_input.data("obj") !== null){
-                    return;
-                }
-                $this.origin_input.data("obj", $this);
+
                 var iframe = $('<iframe id="mediauploader_iframe" name="mediauploader_iframe">').hide();
                 this.files_container = $("<div class='container'>");
                 var extra_fields = this.getExtraFields();
@@ -218,9 +259,7 @@
                      .append($("<input value='select' type='button'>").bind('click', function(){
                          $this.widget.display.html('');
                          $this.files_container.find(".selected").each(function(){
-                             var file = $(this).data('item');
-                             var rendered = MediaUploader.Render[file.type](file);
-                             $this.widget.display.append(rendered);
+                            $this.displayAdd($(this).data('item'));
                          });
                          $this.win.close();
                      }));
@@ -236,6 +275,13 @@
 
                 return this.win;
             },
+            displayAdd: function(file){
+                var cont = $('<div>');
+                var input = $('<input type="hidden">').attr('name', (this.config.multiple)? this.name+'[]' :  this.name).attr('value', file.id);
+                var rendered = MediaUploader.Render[file.type](file);
+                cont.append(rendered).append(input);
+                this.widget.display.append(cont);
+            },
             message: function(message, type){
                 var m = $('<div>').attr('class', type).html(message);
                 this.message_container.html(m);
@@ -245,8 +291,16 @@
                     alert("Item with incorrect or null type: " + item.type);
                     return;
                 }
+                $fs = this;
                 var div = $("<div class='file unselected'>");
                     div.append($("<div class='select'>").html(MediaUploader.i18n.select).bind('click',function(){
+                        if(!$fs.config.multiple){
+                            $fs.files_container.find(".file").each(function(){
+                                $(this).removeClass("selected");
+                                $(this).addClass("unselected");
+                            });
+                        }
+
                         var select_b = $(this);
                         if(div.hasClass('unselected')){
                             div.removeClass('unselected');
@@ -281,12 +335,19 @@
 })(jQuery);
 
 </script>
-<input type="TEXT" name="matias">
+<input type="TEXT" id ="matias" name="matias[]" value="1">
+<input type="TEXT" name="matiasd[]" id="matias2"  value="2">
+<input type="hidden" name="matiasd[]" id="3"  value="2">
 
 <script>
-    MediaUploader.FileSelector("input", {
-        categories: ["rubros"]
-    }); 
+     MediaUploader.FileSelector("input[type=TEXT]", {
+        categories: ["guitars"],
+        multiple: true
+    });
+    MediaUploader.FileSelector("[type=hidden]", {
+        categories: ['pianos', 'drums'],
+        multiple: false
+    });
 </script>
 
 <style>
