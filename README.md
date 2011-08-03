@@ -32,9 +32,9 @@ Javascript:
 Selecting Multiple files
 ------------------------
 HTML:
-    <!-- Again, i'm supposing you are editing -->
-    <input type="hidden" class="group" name="file_id[]" value="1">
-    <input type="hidden" class="group" name="file_id[]" value="2">
+      <!-- Again, i'm supposing you are editing -->
+      <input type="hidden" class="group" name="file_id[]" value="1">
+      <input type="hidden" class="group" name="file_id[]" value="2">
 
 Javascript: 
     MediaUploader.FileSelector(".group", {
