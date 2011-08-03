@@ -57,7 +57,9 @@ Javascript:
         categories: ['guitars', 'drums', 'cities', 'top models']
     });
 
-This categories are mainly usefull for interacting with the server side. In the server side, you recive this categories, to list the selectable files.
+This categories are mainly usefull for interacting with the server side. In the server side, when you are listing the selectable files, you receive this categories, then you can filter them. If you don't receive any, you have to list them all.
+MediaUploader works with just one Store object, but it knows wich categories are you using in every FileSelector.
 When you upload a new file, it provides you a combo box to choose one of this categories.
+
 
    
