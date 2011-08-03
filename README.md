@@ -21,7 +21,6 @@ Examples of usage
 
 One file selector
 -----------------
-HTML:
     <!-- you need a name to save the file id setted with jQueryMediaUploader. Value="1" if you are editing, if it's a new entity leave it empty -->
     <input type="hidden" name="file_id" value="1">
 
