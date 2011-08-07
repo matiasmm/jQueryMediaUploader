@@ -161,7 +161,7 @@
             default_files: default_files,
 
             create: function(){
-                var div =  $('<div>');
+                var div =  $('<div class="jqMediauploader">');
 
                 if(this.config.categories !== undefined){
                     MediaUploader.Store.pushCateogories(this.config.categories);
@@ -171,10 +171,10 @@
                 this.widget.container = div;
                 this.name = this.origin_input.attr("name");
                 div
-                    .append(o.widget.display = $('<div>'))
+                    .append(o.widget.display = $('<div class="display">'))
                     .append(o.widget.button = $('<input type="button">').attr("value", MediaUploader.i18n.select_element));
                     o.widget.button.bind('click', {t: this},function(event){
-                        $("body").append(event.data.t.makeWindow());
+                        div.append(event.data.t.makeWindow());
                     });
 
                 if(this.config.multiple){ 
@@ -281,7 +281,7 @@
                 return this.win;
             },
             displayAdd: function(file){
-                var cont = $('<div>');
+                var cont = $('<div class="item">');
                 var input = $('<input type="hidden">').attr('name', (this.config.multiple)? this.name+'[]' :  this.name).attr('value', file.id);
                 var rendered = MediaUploader.Render[file.type](file);
                 cont.append(rendered).append(input);

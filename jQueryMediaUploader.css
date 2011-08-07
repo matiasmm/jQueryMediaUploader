@@ -21,9 +21,12 @@
         width: 450px;
         margin: auto ;
         height: 300px;
-        position: fixed;                
+        position: absolute;                
     }
     .mediauploader *{
         font: 10px arial;
+    }
+    .jqMediauploader .display .item{
+        display: inline;
     }
 
