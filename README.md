@@ -16,6 +16,9 @@ Does it just includes images??
 ------------------------------
 At the moment yes, But it's very easy to extend. The idea is to upload all kind of media files, but at this moment, it just renders images.
 
+
+
+
 Examples of usage
 =================
 
@@ -67,5 +70,49 @@ This categories are mainly usefull for interacting with the server side. In the 
 MediaUploader works with just one Store object, but it knows wich categories are you using in every FileSelector.
 When you upload a new file, it provides you a combo box to choose one of this categories.
 
+Installation
+============
+
+Client side
+-----------
+
+1. In client side, include this code between the header tags:
+
+__HTML__
+    <link rel="stylesheet" type="text/css" media="screen" href="jQueryMediaUploader.css" />
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jQueryMediaUploader.js"></script>
+    <script typepe="text/javascript">
+        MediaUploader.Store.urls = {
+            list: 'url_to_the_action_that_list_files.json',
+            upload: 'url_to_the_action_to_upload_a_single_file.json',
+            delete: 'url_to_the_action_to_delete_a_single_file.json',
+        };
+    </script>
+
+2. Change the urls (list, upload, delete) depending on your application. You have to develop the server side as described later.
+
+3. Create a MediaUploader instance. Usage Example:
+
+
+__HTML__
+    <input type="hidden" name="file" id="file">
+    <script>
+        MediaUploader.FileSelector("#file");
+    </script>
+
+Server side
+-----------
+
+You have to develop this part because this repository only includes the client side.
+
+url_to_the_action_that_list_files.json
+--------------------------------------
+
+url_to_the_action_to_upload_a_single_file.json
+----------------------------------------------
+
+url_to_the_action_to_delete_a_single_file.json
+----------------------------------------------
 
    

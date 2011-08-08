@@ -133,6 +133,10 @@
                 .attr("src", item.src)
                 .attr("height", item.width)
                 .attr("width", item.height);
+        },
+        video: function(item){
+            return $("<div class='video'>")
+                .data('id', item.id);
         }
     };
     MediaUploader.FileSelector = function(input_selector, config){

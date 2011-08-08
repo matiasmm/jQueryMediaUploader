@@ -30,3 +30,9 @@
         display: inline;
     }
 
+
+    .jqMediauploader .video, .mediauploader .video{
+        padding-bottom: 64px;
+        width: 64px;
+        background-image: url(images/video64x64.png);
+    }
