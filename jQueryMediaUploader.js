@@ -21,12 +21,15 @@
         urls: {
             list: 'actions.php?action=list',
             upload: 'actions.php?action=upload',
-            delete: ''
+            "remove": ''
         },
         categories: [],
         files: [],
         status: 'none',
         subscribed: [],
+        //callbacks array
+        after_start: [],
+
         subscribe: function(fs){
             this.subscribed.push(fs);
             this._init_window(fs);
@@ -53,6 +56,10 @@
             return null;
         },
         start: function(callback){
+            if(callback !== undefined){
+                this.after_start.push(callback);
+            }
+
             if(this.status == 'none'){
                 this.status = 'loading';
                 var d = {};
@@ -76,8 +83,8 @@
 
                         MediaUploader.Store.broadcast('', 'success');
                         MediaUploader.status = 'success';
-                        if(callback !== undefined){
-                            callback();
+                        for(var i=0; i< MediaUploader.Store.after_start.length; i++ ){
+                            MediaUploader.Store.after_start[i]();
                         }
                     }
                 });
@@ -112,14 +119,14 @@
                 fs.add(this.files[k]);
             }
         },
-        delete: function(id){
+        "remove": function(id){
             this.files.push(item);
             for(var k=0; k < this.subscribed.length; k++){
-                this.subscribed[k].delete(id);
+                this.subscribed[k].remove(id);
             }
-            for(var k=0; k < this.files.length; k++){
-                if(id === this.files[k].id){
-                    this.files.splice(k,1);
+            for(var i=0; k < this.files.length; i++){
+                if(id === this.files[i].id){
+                    this.files.splice(i,1);
                     return;
                 }
             }
@@ -187,7 +194,7 @@
                 this.origin_input.after(div);
                 this.origin_input.remove();
                 if(this.default_files.length){
-                    $(document).ready(function(){
+                    var onready = function(){
                         MediaUploader.Store.start(function(){
                             o.widget.display.html('');
                             for(var k=0; k<o.default_files.length; k++){
@@ -197,7 +204,10 @@
                                 }
                             }
                         });
-                    })
+                    };
+
+                    ($.isReady)? onready() : $(document).ready(onready) ;
+                    
                 }
             },
             getExtraFields: function(){
@@ -325,7 +335,7 @@
                 div.data("item",item);
                 this.files_container.append(div);
             },
-            delete: function(id){
+            "remove": function(id){
                 this.files_container.find(".file").each(function(){
                     var it = $(this).data("item");
                     if(it.id === item.id){
