@@ -23,6 +23,15 @@ if($_GET['action'] == 'list'){
                     'height' => '100',
                     'width' => '100',
                 ),
+               array(
+                    'id' => 3, //mandatory
+                    'type' => 'image', //mandatory
+                    'src' => 'http://t2.gstatic.com/images?q=tbn:ANd9GcRCNdcXr6Mn18kc069JtQFywX6oYr4O2LtleXsUC8iNiUaSmpjH', 
+                    'category' => 'pianos', 
+                    'height' => '100',
+                    'width' => '100',
+                ),
+
 
             )
         )

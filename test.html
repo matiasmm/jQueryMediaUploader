@@ -7,12 +7,12 @@
 
     </head>
     <body>
-        <input type="TEXT" id ="matias" name="matias[]" value="1">
-        <input type="TEXT" name="matiasd[]" id="matias2"  value="2">
+        <input type="text" class="multiple" id ="matias" name="matias[]" value="1">
+        <input type="text" class="multiple" name="matiasd[]" id="matias2"  value="2">
         <input type="hidden" name="matiasd[]" id="3"  value="2">
 
         <script type="text/javascript">
-             MediaUploader.FileSelector("input[type=TEXT]", {
+             MediaUploader.FileSelector("[type=text]", {
                 categories: ["guitars"],
                 multiple: true
             });

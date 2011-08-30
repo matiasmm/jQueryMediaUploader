@@ -34,10 +34,21 @@
             this.subscribed.push(fs);
             this._init_window(fs);
         },
+        search_in_array: function(arr, o){
+            var pos = -1;
+            for(var kc = 0; kc < arr.length ;kc++){
+                if(arr[kc] === o){
+                    pos = kc;
+                }
+            }
+            return pos;
+        },
         pushCateogories: function(arr){
             for(var k = 0; k< arr.length; k++){
                 var e = arr[k];
-                if(this.categories.indexOf(e) === -1){
+                var pos = -1;
+                
+                if(this.search_in_array(this.categories, e) === -1){
                     this.categories.push(e);
                 }
             }
@@ -105,7 +116,7 @@
         add: function(item){
             this.files.push(item);
             for(var k=0; k < this.subscribed.length; k++){
-                if(this.subscribed[k].config.categories !== undefined && this.subscribed[k].config.categories.indexOf(item.category) === -1){
+                if(this.subscribed[k].config.categories !== undefined && this.search_in_array(this.subscribed[k].config.categories, item.category) === -1){
                     continue;
                 } 
                 this.subscribed[k].add(item);
@@ -113,7 +124,7 @@
         },
         _init_window: function(fs){
             for(var k = 0; k < this.files.length; k++){
-                if(fs.config.categories !== undefined && fs.config.categories.indexOf(this.files[k].category) === -1){
+                if(fs.config.categories !== undefined && this.search_in_array(fs.config.categories, this.files[k].category) === -1){
                     continue;
                 }
                 fs.add(this.files[k]);
@@ -147,14 +158,18 @@
         }
     };
     MediaUploader.FileSelector = function(input_selector, config){
-        var input = $(input_selector);
+        var input = $(input_selector);       
+        if(input.lengthi == 0){
+            alert("No elements matching with selector: " + input_selector);
+        }
+
         if(config === undefined){
             config = {};
         }
 
         var default_files = [$(input).val()];
         if(config.multiple == true){
-            $(input).each(function(i, el){
+            input.each(function(i, el){
                 if(i == 0){
                     input = $(el);
                 }else{
@@ -162,6 +177,10 @@
                     $(el).remove();
                 }
             });
+        }
+
+        if(input == null){
+            alert("No elements matching with selector: " + input_selector);
         }
 
         var o = {
@@ -180,7 +199,8 @@
                     MediaUploader.Store.noCateogories = true;
                 }
                 this.widget.container = div;
-                this.name = this.origin_input.attr("name");
+                this.name = $(this.origin_input).attr("name");
+
                 div
                     .append(o.widget.display = $('<div class="display">'))
                     .append(o.widget.button = $('<input type="button">').attr("value", MediaUploader.i18n.select_element));
@@ -236,7 +256,7 @@
                 var extra_fields = this.getExtraFields();
                 this.win = $('<div class="mediauploader">')
                      .append(iframe)
-                     .append($('<a>').html("X").bind('click',function(){
+                     .append($('<a class="close-button">').html("&nbsp;").bind('click',function(){
                        $this.win.close(); 
                      }))
                      .append($('<form target="mediauploader_iframe" method="post" enctype="multipart/form-data">').bind('submit', function(){
