@@ -4,11 +4,33 @@
         margin: 5px;
         float: left;
     }
+
+
+    .mediauploader .button{
+        border-top: 1px solid #cecece;
+        border-left: 1px solid #cecece;
+        border-right: 2px solid #4a4a4a;
+        border-bottom: 2px solid #4a4a4a;
+        margin: 2px;
+        padding: 2px 14px;
+        display: block;
+       text-decoration: none;
+       color: #0c479d;
+       background-color: #DBDBDB;
+       cursor: pointer;
+    }
+
     .mediauploader .file.selected{
         border-color: orange;
     }
     .mediauploader .file.unselected{
         border-color: #507AAA;
+    }
+
+    .mediauploader .file .description{
+        background-color: #FFF6B5;
+        color: black;
+        padding: 1px 3px 1px 3px; 
     }
 
     .mediauploader .container{

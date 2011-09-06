@@ -14,6 +14,7 @@ if($_GET['action'] == 'list'){
                     'category' => 'guitars',
                     'height' => '100',
                     'width' => '100',
+                   'description' => "Description Test Lorem Ipsum",
                ),
                array(
                     'id' => 2, //mandatory
@@ -30,6 +31,7 @@ if($_GET['action'] == 'list'){
                     'category' => 'pianos', 
                     'height' => '100',
                     'width' => '100',
+                   'description' => "Description test",
                 ),
 
 
@@ -71,6 +73,7 @@ if($_GET['action'] == 'upload'){
                     'category' => 'drums', 
                     'height' => '100',
                     'width' => '100',
+                    'description' => "Description test",
                )));
 }
 

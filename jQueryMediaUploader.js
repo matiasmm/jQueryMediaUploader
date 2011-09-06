@@ -332,7 +332,7 @@
                 }
                 $fs = this;
                 var div = $("<div class='file unselected'>");
-                    div.append($("<div class='select'>").html(MediaUploader.i18n.select).bind('click',function(){
+                    div.append($("<div class='select button'>").html(MediaUploader.i18n.select).bind('click',function(){
                         if(!$fs.config.multiple){
                             $fs.files_container.find(".file").each(function(){
                                 $(this).removeClass("selected");
@@ -352,6 +352,9 @@
                         }
                     }))
                     .append(MediaUploader.Render[item.type](item));
+                    if(item["description"] !== undefined){
+                        div.append($('<div class="description">').html(item.description));
+                    }
                 div.data("item",item);
                 this.files_container.append(div);
             },
