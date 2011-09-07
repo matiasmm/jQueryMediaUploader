@@ -13,7 +13,8 @@
             select: "Select",
             unselect: "Unselect",
             description: "description",
-            required: "required"
+            required: "required",
+            remove: "remove"
 
         }
     };
@@ -47,7 +48,7 @@
             for(var k = 0; k< arr.length; k++){
                 var e = arr[k];
                 var pos = -1;
-                
+
                 if(this.search_in_array(this.categories, e) === -1){
                     this.categories.push(e);
                 }
@@ -118,7 +119,7 @@
             for(var k=0; k < this.subscribed.length; k++){
                 if(this.subscribed[k].config.categories !== undefined && this.search_in_array(this.subscribed[k].config.categories, item.category) === -1){
                     continue;
-                } 
+                }
                 this.subscribed[k].add(item);
             }
         },
@@ -142,7 +143,7 @@
                 }
             }
         }
-    
+
     };
     MediaUploader.Render = {
         image: function(item){
@@ -157,8 +158,8 @@
                 .data('id', item.id);
         }
     };
-    MediaUploader.FileSelector = function(input_selector, config){
-        var input = $(input_selector);       
+    MediaUploader._BaseFileSelector = function(input_selector, config){
+        var input = $(input_selector);
         if(input.lengthi == 0){
             alert("No elements matching with selector: " + input_selector);
         }
@@ -189,7 +190,9 @@
             config: config,
             name: null,
             default_files: default_files,
-
+            /**
+             * Creates the selected items displayer and the button that renders the widget selector
+             */
             create: function(){
                 var div =  $('<div class="jqMediauploader">');
 
@@ -208,7 +211,7 @@
                         div.append(event.data.t.makeWindow());
                     });
 
-                if(this.config.multiple){ 
+                if(this.config.multiple){
                     this.name = (this.name.substring(this.name.length-2,this.name.length) == '[]')? this.name.substring(0, this.name.length-2) : this.name;
                 }
                 this.origin_input.after(div);
@@ -220,16 +223,19 @@
                             for(var k=0; k<o.default_files.length; k++){
                                 var f = MediaUploader.Store.getItem(o.default_files[k]);
                                 if(f !== null){
-                                    o.displayAdd(f);
+                                    o._displayAdd(f);
                                 }
                             }
                         });
                     };
 
                     ($.isReady)? onready() : $(document).ready(onready) ;
-                    
+
                 }
             },
+            /**
+             * Creates extra fields inside the uploader file form in addition to the input file field.
+             */
             getExtraFields: function(){
                 var d = $("<div>");
                 if(this.config.categories !== undefined){
@@ -242,7 +248,9 @@
                 }
                 return d;
             },
-            
+             /**
+              * Creates widget(to select a file)
+              */
              makeWindow: function(){
                 var $this = this;
 
@@ -256,8 +264,8 @@
                 var extra_fields = this.getExtraFields();
                 this.win = $('<div class="mediauploader">')
                      .append(iframe)
-                     .append($('<a class="close-button">').html("&nbsp;").bind('click',function(){
-                       $this.win.close(); 
+                     .append($('<div class="close-button">').html("&nbsp;").bind('click',function(){
+                       $this.win.close();
                      }))
                      .append($('<form target="mediauploader_iframe" method="post" enctype="multipart/form-data">').bind('submit', function(){
                              var valid = true;
@@ -283,7 +291,7 @@
                                  }
 
                              });
-                             
+
                              $this.message(MediaUploader.i18n.uploading, 'notice');
 
                          })
@@ -296,13 +304,9 @@
                      .append(this.message_container = $('<div class="messages">'))
                      .append(this.files_container)
                      .append($("<input value='select' type='button'>").bind('click', function(){
-                         $this.widget.display.html('');
-                         $this.files_container.find(".selected").each(function(){
-                            $this.displayAdd($(this).data('item'));
-                         });
-                         $this.win.close();
+                         $this.displaySelectedItems();
                      }));
-                     
+
                 this.win.close = function(){
                     MediaUploader.Store.unsubscribe($this);
                     $this.win.remove();
@@ -314,7 +318,19 @@
 
                 return this.win;
             },
-            displayAdd: function(file){
+
+            displaySelectedItems: function(){
+                var $this = this;
+                this.widget.display.html('');
+                this.files_container.find(".selected").each(function(){
+                    $this._displayAdd($(this).data('item'));
+                });
+                this.win.close();
+            },
+            /**
+             * Add item to displayer
+             */
+            _displayAdd: function(file){
                 var cont = $('<div class="item">');
                 var input = $('<input type="hidden">').attr('name', (this.config.multiple)? this.name+'[]' :  this.name).attr('value', file.id);
                 var rendered = MediaUploader.Render[file.type](file);
@@ -325,6 +341,9 @@
                 var m = $('<div>').attr('class', type).html(message);
                 this.message_container.html(m);
             },
+            /**
+             * Add item to Widget container
+             */
             add: function(item){
                 if(item.type == undefined || MediaUploader.Render[item.type] == false){
                     alert("Item with incorrect or null type: " + item.type);
@@ -358,6 +377,9 @@
                 div.data("item",item);
                 this.files_container.append(div);
             },
+            /**
+             * Given an item id, it removes the item being displayed in the items container
+             */
             "remove": function(id){
                 this.files_container.find(".file").each(function(){
                     var it = $(this).data("item");
@@ -369,9 +391,48 @@
                 this.files_container.append(div);
             }
 
-        };   
+        };
+        return o;
+    }
+
+
+    MediaUploader.FileSelector = function(input_selector, config){
+        var o = MediaUploader._BaseFileSelector(input_selector, config);
+        o.displaySelectedItems = function(){
+            var $this = this;
+            this.widget.display.html('');
+            this.files_container.find(".selected").each(function(){
+                $this._displayAdd($(this).data('item'));
+            });
+            this.win.close();
+        };
         o.create();
-    
-        return o;     
+        return o;
+    }
+
+    MediaUploader.MultipleFileSelector = function(input_selector, config){
+        var o = MediaUploader._BaseFileSelector(input_selector, config);
+        config['multiple'] = true;
+        o.displaySelectedItems = function(){
+            var $this = this;
+            this.files_container.find(".selected").each(function(){
+                $this._displayAdd($(this).data('item'));
+            });
+            this.win.close();
+        };
+
+        o._displayAdd = function(file){
+            var cont = $('<div class="item">');
+            var remove = $('<div class="remove">').html('&nbsp;').bind('click',function(){
+                cont.remove();
+            });
+            var input = $('<input type="hidden">').attr('name', (this.config.multiple)? this.name+'[]' :  this.name).attr('value', file.id);
+            var rendered = MediaUploader.Render[file.type](file);
+            cont.append(rendered).append(input).append(remove);
+            this.widget.display.append(cont);
+        };
+
+        o.create();
+        return o;
     }
 })(jQuery);

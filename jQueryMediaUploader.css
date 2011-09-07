@@ -36,6 +36,8 @@
     .mediauploader .container{
         overflow: scroll;
         height:200px;
+        border: 1px solid black;
+        background-color: white;
     }
 
     .mediauploader{
@@ -43,7 +45,7 @@
         background-color: #EEEEEE;
         width: 450px;
         margin: auto ;
-        height: 300px;
+        height: 350px;
         position: absolute;                
         padding: 10px;
         border: 2px solid #507AAA;
@@ -55,10 +57,17 @@
     
     .mediauploader form{
         display: block;
+        margin-top: 20px;
+    }
+
+    .mediauploader form label, .mediauploader form input{
+        display: block;
+        width: auto;
     }
 
     .jqMediauploader .display .item{
         display: inline;
+        margin: 16px 16px 0 0;
     }
 
 
@@ -71,6 +80,23 @@
     .jqMediauploader .close-button{
         padding-bottom: 16px;
         padding-left: 16px;
+        float: left;
         background-image: url(images/close.gif);
         font-size: 0;
+        cursor: pointer;
     }
+
+    .jqMediauploader .remove{
+        padding-bottom: 16px;
+        padding-left: 16px;
+        width: 16px;
+        display: inline;
+        background-image: url(images/close.gif);
+        font-size: 0;
+        cursor: pointer;
+    }
+
+    .jqMediauploader .display{
+        margin: 0 0  16px 0;
+    }
+

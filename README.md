@@ -4,7 +4,7 @@ jQueryMediaUploader
 What is it?
 -----------
 It's jQuery Plugin for uploading files in a form. 
-When you want to upload a file You usually add an input file tag. In this case you add any input tag (text, hidden, etc), this plugins is going to replace it by a button. When you press that button it's going to open the "Media Library". Here you can choose any file you can see or you can upload a new one.
+When you want to upload a file You usually add an input file tag. In this case you add any input tag (text, hidden, etc), this plugin is going to replace it by a button. When you press that button it's going to open the "Media Library". Here you can choose any file you can see or you can upload a new one.
 
 Why It's just client side?
 --------------------------
@@ -44,9 +44,7 @@ __HTML__
 
 __Javascript__ 
 
-    MediaUploader.FileSelector(".group", {
-        multiple: true
-    });
+    MediaUploader.MultipleFileSelector(".group");
 
 You are going to get one button for selecting files multiple files, (not 2 buttons for each hidden).
 
@@ -61,8 +59,7 @@ __HTML__
 
 __Javascript__ 
 
-    MediaUploader.FileSelector(".group", {
-        multiple: true,
+    MediaUploader.MultipleFileSelector(".group", {
         categories: ['guitars', 'drums', 'cities', 'top models']
     });
 
