@@ -419,8 +419,8 @@
     }
 
     MediaUploader.MultipleFileSelector = function(input_selector, config){
-        var o = MediaUploader._BaseFileSelector(input_selector, config);
         config['multiple'] = true;
+        var o = MediaUploader._BaseFileSelector(input_selector, config);
         o.displaySelectedItems = function(){
             var $this = this;
             this.files_container.find(".selected").each(function(){
