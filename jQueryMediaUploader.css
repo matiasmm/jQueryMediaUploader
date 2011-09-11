@@ -5,6 +5,21 @@
         float: left;
     }
 
+    .mediauploader .messages{
+        padding:2px;
+        font-weight: bold;
+        color: white;
+    }
+    .mediauploader .messages .error{
+        border: 1px solid red;
+        background-color: red;
+        color: white;
+    }
+    .mediauploader .messages .notice{
+        border: 1px solid green;
+        background-color: green;
+        color: white;
+    }
 
     .mediauploader .button{
         border-top: 1px solid #cecece;

@@ -287,7 +287,15 @@
                                  if(o.status == 'success'){
                                      MediaUploader.Store.add(o.file);
                                 }else{
-                                    $this.message("Unable to upload file", "error");
+                                    if(o['errors']){
+                                        var m = '';
+                                        for(var k=0;k<o['errors'].length; k++){
+                                            m += o['errors'];
+                                        }
+                                        $this.message(m, "error");
+                                    }else{
+                                        $this.message("Unable to upload file", "error");
+                                    }
                                  }
 
                              });

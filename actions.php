@@ -76,4 +76,12 @@ if($_GET['action'] == 'upload'){
                     'description' => "Description test",
                )));
 }
+if($_GET['action'] == 'upload_with_error'){
+
+    //Image upload causes errors
+    echo json_encode(array(
+            'status' => 'error',
+            'errors'=> array('The file you want to upload is very large')
+        ));
+}
 
